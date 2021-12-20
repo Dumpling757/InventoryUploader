@@ -17,7 +17,7 @@
 
 
 $OriginWarehousePath = "E:\RayVentory"
-$DestinationScanengine = "https://sam-bhyp-b03:591"
+$DestinationScanengine = "https://sam-bhyp-b03.cmp.ad.bhyp.de:443"
 $Certificate = $null
 $UploadUser = $null
 $UploadPassword = $null
@@ -28,7 +28,7 @@ if($UploadUser -and $UploadPassword) {
     [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ($UploadUser, $SecPWD)
 }
 
-Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.ndi, *.gz" | ForEach-Object {
+Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz" | ForEach-Object {
     
     if($Certificate -and !($UploadUser -and $UploadPassword)) {
 
