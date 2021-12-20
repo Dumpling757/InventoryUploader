@@ -35,12 +35,12 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz"
        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Certificate $Certificate
     }
 
-    if(!$Certificate -and ($UploadUser -and $UploadPassword)) {
+    elseif(!$Certificate -and ($UploadUser -and $UploadPassword)) {
 
         $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Credential $Credential
     }
 
-    if($Certificate -and ($UploadUser -and $UploadPassword)) {
+    elseif($Certificate -and ($UploadUser -and $UploadPassword)) {
 
         $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Certificate $Certificate -Credential $Credential
     }
