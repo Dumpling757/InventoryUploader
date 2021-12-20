@@ -32,20 +32,20 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz"
     
     if($Certificate -and !($UploadUser -and $UploadPassword)) {
 
-       $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Certificate $Certificate
+       $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Certificate $Certificate
     }
 
     elseif(!$Certificate -and ($UploadUser -and $UploadPassword)) {
 
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Credential $Credential
+        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Credential $Credential
     }
 
     elseif($Certificate -and ($UploadUser -and $UploadPassword)) {
 
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain" -Certificate $Certificate -Credential $Credential
+        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Certificate $Certificate -Credential $Credential
     }
     else {
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Post -InFile $_ -ContentType "text/plain"
+        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain"
     }
        if(($upload.StatusCode -eq 200)) {
            # Remove-Item -Path $_
