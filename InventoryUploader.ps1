@@ -23,14 +23,12 @@ $UploadUser = $null
 $UploadPassword = $null
 
 
-$AllInventories = Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.ndi, *.gz"
-
 if($UploadUser -and $UploadPassword) {
     [securestring]$SecPWD = ConvertTo-SecureString $UploadPassword -AsPlainText -Force
     [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ($UploadUser, $SecPWD)
 }
-ForEach-Object -InputObject $AllInventories
-{
+
+Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.ndi, *.gz" | ForEach-Object {
     
     if($Certificate -and !($UploadUser -and $UploadPassword)) {
 
