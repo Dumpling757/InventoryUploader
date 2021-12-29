@@ -22,11 +22,24 @@ $Certificate = $null
 $UploadUser = $null
 $UploadPassword = $null
 
+$Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+$Logfile = "InventoryUploader-$Stamp.log"
+
+New-Item  -Path $PSScriptRoot -ItemType "file" -Name $Logfile
+function WriteLog
+{
+Param ([string]$LogString)
+$Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+$LogMessage = "$Stamp $LogString"
+Add-content $LogFile -value $LogMessage
+}
 
 if($UploadUser -and $UploadPassword) {
     [securestring]$SecPWD = ConvertTo-SecureString $UploadPassword -AsPlainText -Force
     [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ($UploadUser, $SecPWD)
 }
+
+
 
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz" | ForEach-Object {
     
@@ -50,9 +63,11 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz"
        if(($upload.StatusCode -eq 200)) {
            # Remove-Item -Path $_
            Move-Item -Path $_ -Force -Destination "$PSScriptRoot/Processed/"
+           WriteLog "$_ successfully uploaded"
        }
        else {
            Move-Item -Path $_ -Force -Destination  "$PSScriptRoot/BadLogs/"
+           WriteLog "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
        }
     
 }
