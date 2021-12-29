@@ -49,10 +49,10 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz"
     }
        if(($upload.StatusCode -eq 200)) {
            # Remove-Item -Path $_
-           Move-Item -Path $_ -Destination "$PSScriptRoot/Processed/"
+           Move-Item -Path $_ -Force -Destination "$PSScriptRoot/Processed/"
        }
        else {
-           Move-Item -Path $_ -Destination "$PSScriptRoot/BadLogs/"
+           Move-Item -Path $_ -Force -Destination  "$PSScriptRoot/BadLogs/"
        }
     
 }
