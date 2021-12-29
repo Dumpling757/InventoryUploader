@@ -28,10 +28,10 @@ $Logfile = "InventoryUploader-$Stamp.log"
 New-Item  -Path $PSScriptRoot -ItemType "file" -Name $Logfile
 function WriteLog
 {
-Param ([string]$LogString)
-$Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
-$LogMessage = "$Stamp $LogString"
-Add-content $LogFile -value $LogMessage
+    Param ([string]$LogString)
+    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+    $LogMessage = "$Stamp $LogString"
+    Add-content $LogFile -value $LogMessage
 }
 
 if($UploadUser -and $UploadPassword) {
@@ -60,14 +60,16 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz"
     else {
         $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain"
     }
-       if(($upload.StatusCode -eq 200)) {
-           # Remove-Item -Path $_
-           Move-Item -Path $_ -Force -Destination "$PSScriptRoot/Processed/"
-           WriteLog "$_ successfully uploaded"
-       }
-       else {
-           Move-Item -Path $_ -Force -Destination  "$PSScriptRoot/BadLogs/"
-           WriteLog "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
-       }
+
+
+    if(($upload.StatusCode -eq 200)) {
+        # Remove-Item -Path $_
+        Move-Item -Path $_ -Force -Destination "$PSScriptRoot/Processed/"
+        WriteLog "$_ successfully uploaded"
+    }
+    else {
+        Move-Item -Path $_ -Force -Destination  "$PSScriptRoot/BadLogs/"
+        WriteLog "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
+    }
     
 }
