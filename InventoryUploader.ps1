@@ -17,10 +17,8 @@
 
 
 $OriginWarehousePath = "E:\RayVentory"
-$DestinationScanengine = "https://sam-bhyp-b03.cmp.ad.bhyp.de:443"
-$Certificate = $null
-$UploadUser = $null
-$UploadPassword = $null
+$DestinationScanengine = "https://sam-bhyp-b03.cmp.ad.bhyp.de/"
+
 
 $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
 $Logfile = "InventoryUploader-$Stamp.log"
@@ -34,32 +32,16 @@ function WriteLog
     Add-content $LogFile -value $LogMessage
 }
 
-if($UploadUser -and $UploadPassword) {
-    [securestring]$SecPWD = ConvertTo-SecureString $UploadPassword -AsPlainText -Force
-    [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ($UploadUser, $SecPWD)
-}
+
 
 
 
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz" | ForEach-Object {
     
-    if($Certificate -and !($UploadUser -and $UploadPassword)) {
+    $Destination = $DestinationScanengine + $_
 
-       $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Certificate $Certificate
-    }
+       $upload = Invoke-WebRequest -Uri $Destination -Method Put -InFile $_ -UseDefaultCredentials
 
-    elseif(!$Certificate -and ($UploadUser -and $UploadPassword)) {
-
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Credential $Credential
-    }
-
-    elseif($Certificate -and ($UploadUser -and $UploadPassword)) {
-
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain" -Certificate $Certificate -Credential $Credential
-    }
-    else {
-        $upload = Invoke-WebRequest -Uri $DestinationScanengine -Method Put -InFile $_ -ContentType "text/plain"
-    }
 
 
     if(($upload.StatusCode -eq 200)) {
