@@ -1,18 +1,21 @@
 <#
 .SYNOPSIS
     InventoryUploader
+    Author: Marius Ulbrich
+    Version: 1.0.0.0
+    Company: Raynet GmbH
+
 .DESCRIPTION
     When inventories are uploaded to an old RayVentory Server directly, this script uploads the inventories to a Scan Engine
 .INPUTS
     $OriginWarehousePath: Location of the original Warehouse. e. g. "C:\RayVentory" this parameter must not end with a slash!
     $DestinationScanengine: HTTP(S) Path of the Scan Engine, where the Inventories are to be uploaded to.
-    [$Certificate]: Path to Certificate used for Upload
-    [$UploadUser]: User for authentication towards the Scan Engine
-    [$UploadPassword]: Password for authentication towards the Scan Engine
+
 .OUTPUTS
     Output (if any)
 .NOTES
     General notes
+
 #>
 
 
@@ -32,17 +35,11 @@ function WriteLog
     Add-content $LogFile -value $LogMessage
 }
 
-
-
-
-
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz" | ForEach-Object {
     
     $Destination = $DestinationScanengine + $_
 
        $upload = Invoke-WebRequest -Uri $Destination -Method Put -InFile $_ -UseDefaultCredentials
-
-
 
     if(($upload.StatusCode -eq 200)) {
         # Remove-Item -Path $_
