@@ -35,7 +35,7 @@ function WriteLog
     Add-content $LogFile -value $LogMessage
 }
 
-Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\*" -Filter "*.gz" | ForEach-Object {
+Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\" | ForEach-Object {
     
     $Destination = $DestinationScanengine + $_
 
