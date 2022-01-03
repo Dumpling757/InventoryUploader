@@ -23,16 +23,6 @@ $OriginWarehousePath = "E:\RayVentory"
 $DestinationScanengine = "https://sam-bhyp-b03.cmp.ad.bhyp.de/"
 
 
-$Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
-$Logfile = "InventoryUploader-$Stamp.log"
-
-New-Item  -Path $PSScriptRoot -ItemType "file" -Name $Logfile
-function WriteLog
-{
-    Param ([string]$LogString)
-    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
-    $LogMessage = "$Stamp $LogString"
-    Add-content $LogFile -value $LogMessage
 }
 
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\" | ForEach-Object {
@@ -44,11 +34,11 @@ Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\" | ForEach-Objec
     if(($upload.StatusCode -eq 200)) {
         # Remove-Item -Path $_
         Move-Item -Path $_.FullName -Force -Destination "$PSScriptRoot/Processed/"
-        WriteLog "$_ successfully uploaded"
+        Write-Output "$_ successfully uploaded"
     }
     else {
         Move-Item -Path $_.FullName -Force -Destination  "$PSScriptRoot/BadLogs/"
-        WriteLog "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
+        Write-Output "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
     }
     
 }
