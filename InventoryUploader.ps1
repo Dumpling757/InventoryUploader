@@ -37,17 +37,17 @@ function WriteLog
 
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\" | ForEach-Object {
     
-    $Destination = $DestinationScanengine + $_
+    $Destination = $DestinationScanengine + $_.Name
 
-       $upload = Invoke-WebRequest -Uri $Destination -Method Put -InFile $_ -UseDefaultCredentials
+       $upload = Invoke-WebRequest -Uri $Destination -Method Put -InFile $_.FullName -UseDefaultCredentials
 
     if(($upload.StatusCode -eq 200)) {
         # Remove-Item -Path $_
-        Move-Item -Path $_ -Force -Destination "$PSScriptRoot/Processed/"
+        Move-Item -Path $_.FullName -Force -Destination "$PSScriptRoot/Processed/"
         WriteLog "$_ successfully uploaded"
     }
     else {
-        Move-Item -Path $_ -Force -Destination  "$PSScriptRoot/BadLogs/"
+        Move-Item -Path $_.FullName -Force -Destination  "$PSScriptRoot/BadLogs/"
         WriteLog "$_ was not uploaded but can be found here: $PSScriptRoot/BadLogs/"
     }
     
