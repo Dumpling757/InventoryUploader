@@ -23,8 +23,6 @@ $OriginWarehousePath = "E:\RayVentory"
 $DestinationScanengine = "https://sam-bhyp-b03.cmp.ad.bhyp.de/"
 
 
-}
-
 Get-ChildItem -Path "$OriginWarehousePath\Incoming\Inventories\" | ForEach-Object {
     
     $Destination = $DestinationScanengine + $_.Name
